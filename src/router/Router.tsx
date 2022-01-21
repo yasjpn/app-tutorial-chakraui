@@ -11,8 +11,9 @@ export const Router: FC = memo(() => {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="home">
-        {homeRoute.map((route) => (
+        {homeRoute.map((route, i) => (
           <Route
+            key={i}
             path={route.path}
             element={<HeaderLayout>{route.children}</HeaderLayout>}
           />

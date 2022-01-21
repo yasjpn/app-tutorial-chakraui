@@ -1,21 +1,21 @@
-import {
-  Box,
-  Button,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  Flex,
-  Heading,
-  IconButton,
-  Link,
-  DrawerBody,
-  useDisclosure
-} from "@chakra-ui/react";
-import { memo, FC } from "react";
-import { HamburgerIcon } from "@chakra-ui/icons";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { memo, FC, useCallback } from "react";
+import { Box, Flex, Heading, Link, useDisclosure } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+
+import { MenuIconButton } from "../../atoms/button/MenuIconButton";
+import { MenuDrawer } from "../../molecules/MenuDrawer";
 
 export const Header: FC = memo(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate(); // in place of useHistory
+
+  const onClickHome = useCallback(() => navigate("/home"), []);
+  const onClickUserManagement = useCallback(
+    () => navigate("/home/user_management"),
+    []
+  );
+  const onClickSetting = useCallback(() => navigate("/home/setting"), []);
   return (
     <>
       <Flex
@@ -26,7 +26,13 @@ export const Header: FC = memo(() => {
         justify="space-between"
         padding={{ base: 3, md: 5 }}
       >
-        <Flex align="center" as="a" mr={8} _hover={{ cursor: "pointer" }}>
+        <Flex
+          align="center"
+          as="a"
+          mr={8}
+          _hover={{ cursor: "pointer" }}
+          onClick={onClickHome}
+        >
           <Heading as="h1" fontSize={{ base: "md", md: "lg" }}>
             User Management App
           </Heading>
@@ -38,30 +44,19 @@ export const Header: FC = memo(() => {
           display={{ base: "none", md: "flex" }}
         >
           <Box pr={4}>
-            <Link>UserListings</Link>
+            <Link onClick={onClickUserManagement}>UserListings</Link>
           </Box>
-          <Link>Settings</Link>
+          <Link onClick={onClickSetting}>Settings</Link>
         </Flex>
-        <IconButton
-          aria-label="menubutton"
-          icon={<HamburgerIcon />}
-          size="sm"
-          variant="unstyled"
-          display={{ base: "block", md: "none" }}
-          onClick={onOpen}
-        />
+        <MenuIconButton onOpen={onOpen} />
       </Flex>
-      <Drawer placement="left" size="xs" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay>
-          <DrawerContent>
-            <DrawerBody p={0} bg="gray.100">
-              <Button w="100%">TOP</Button>
-              <Button w="100%">UserListings</Button>
-              <Button w="100%">Settings</Button>
-            </DrawerBody>
-          </DrawerContent>
-        </DrawerOverlay>
-      </Drawer>
+      <MenuDrawer
+        onClose={onClose}
+        isOpen={isOpen}
+        onClickHome={onClickHome}
+        onClickUserManagement={onClickUserManagement}
+        onClickSetting={onClickSetting}
+      />
     </>
   );
 });
