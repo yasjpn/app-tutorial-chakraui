@@ -1,7 +1,7 @@
 export type User = {
   id: number;
   username: string;
-  eamil: string;
+  email: string;
   address: {
     street: string;
     suite: string;
